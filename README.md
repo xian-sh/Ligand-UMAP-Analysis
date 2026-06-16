@@ -1,4 +1,3 @@
-```markdown
 # Molecular Feature Case
 
 A molecular feature reduction pipeline supporting three feature types:
@@ -168,4 +167,3 @@ Each run generates the following files in `--output-dir`:
 ## Notes
 
 `fingerprint` is suitable for quickly reproducing the original notebook; `descriptor` is more interpretable; `chembert` is better suited for exploring pre-trained semantic representations of SMILES, but requires additional model files and longer runtime.
-```
