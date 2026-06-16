@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "molecular-feature-case"
+version = "0.1.0"
+description = "Molecular feature extraction, UMAP reduction, and clustering case study."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pandas",
+  "numpy",
+  "matplotlib",
+  "scikit-learn",
+  "umap-learn",
+  "tqdm",
+  "rdkit",
+]
+
+[project.optional-dependencies]
+chembert = ["torch", "transformers"]
+
+[project.scripts]
+molecular-feature-case = "molecular_feature_case.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["molecular_feature_case*"]
+

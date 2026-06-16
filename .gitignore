@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+molecular_feature_outputs/
+outputs_*/
+scripts/demo_molecules.csv
+scripts/demo_outputs/
+*.egg-info/
+.pytest_cache/
