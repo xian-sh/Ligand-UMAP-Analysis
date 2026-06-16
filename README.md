@@ -1,6 +1,6 @@
 # Molecular Feature Case
 
-一个把 `Untitled1(1).ipynb` 整理成 GitHub 仓库风格的分子特征降维案例。原 notebook 只做分子指纹降维；这里拆成了可复用包结构，并支持三类特征：
+分子特征降维案例。支持三类特征：
 
 - `fingerprint`：RDKit Morgan/MACCS/AtomPair/Torsion 指纹组合
 - `descriptor`：RDKit 分子描述符
