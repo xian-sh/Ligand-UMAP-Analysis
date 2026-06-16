@@ -1,14 +1,14 @@
 # Molecular Feature Case
 
-A molecular feature reduction workflow for **SMILES-based datasets**. It supports three feature types:
+A molecular feature reduction workflow for SMILES-based datasets. It supports three feature types:
 
-- `fingerprint`: combined RDKit fingerprints, including Morgan, MACCS, AtomPair, and Topological Torsion
+- `fingerprint`: RDKit fingerprint combinations, including Morgan, MACCS, AtomPair, and Topological Torsion
 - `descriptor`: RDKit molecular descriptors
 - `chembert`: embeddings from pretrained ChemBERT / ChemBERTa models
 
-The overall pipeline is:
+Pipeline:
 
-**Load SMILES data → parse / repair SMILES → build features → PCA denoising → UMAP dimensionality reduction → KMeans clustering → export CSV files and plots**
+**Load SMILES data → parse / repair SMILES → build features → PCA denoising → UMAP reduction → KMeans clustering → export CSV files and plots**
 
 ---
 
@@ -38,131 +38,162 @@ The overall pipeline is:
 ├── requirements.txt
 ├── requirements-chembert.txt
 └── README.md
+```
 
-Installation
+---
+
+## Installation
 
 Install the core environment:
-bash
 
+```bash
 pip install -r requirements.txt
+```
 
-If you want to use ChemBERT embeddings:
-bash
+Install ChemBERT dependencies if needed:
 
+```bash
 pip install -r requirements-chembert.txt
+```
 
-You can also install the project as a package:
-bash
+Or install the package directly:
 
+```bash
 pip install -e .
+```
 
-If pip install rdkit is unstable in your environment, using Conda is recommended:
-bash
+If `pip install rdkit` is unstable in your environment, using Conda is recommended:
 
+```bash
 conda install -c conda-forge rdkit
+```
 
-Input Format
+---
 
-Input files support CSV and TSV formats.
+## Input Format
 
-By default, the program will automatically search for one of the following SMILES column names:
+Input files support CSV and TSV.
 
-    SMILES
-    psmiles
-    smiles_list
-    canonical_smiles
+The program automatically searches for a SMILES column using:
 
-If none of these columns is found, the first column will be used as the SMILES column.
+- `SMILES`
+- `psmiles`
+- `smiles_list`
+- `canonical_smiles`
 
-For molecule identifiers, the program will look for:
+If none of these are found, the first column is used as the SMILES column.
 
-    ID
-    id
-    name
-    Name
-    index
+For identifiers, the program searches for:
 
-If no ID column is found, row indices will be generated automatically.
-Usage
-Notebook demo
-bash
+- `ID`
+- `id`
+- `name`
+- `Name`
+- `index`
 
+If no ID column is found, row indices are generated automatically.
+
+---
+
+## Usage
+
+### Notebook demo
+
+```bash
 jupyter notebook scripts/demo.ipynb
+```
 
-Use RDKit fingerprints
-bash
+### RDKit fingerprints
 
+```bash
 python molecular_feature_reduction_case.py \
   --input data.csv \
   --feature-type fingerprint \
   --output-dir outputs_fingerprint
+```
 
-Use RDKit descriptors
-bash
+### RDKit descriptors
 
+```bash
 python molecular_feature_reduction_case.py \
   --input data.csv \
   --feature-type descriptor \
   --output-dir outputs_descriptor
+```
 
-Use ChemBERT embeddings
-bash
+### ChemBERT embeddings
 
+```bash
 python molecular_feature_reduction_case.py \
   --input data.csv \
   --feature-type chembert \
   --chembert-model seyonec/ChemBERTa-zinc-base-v1 \
   --output-dir outputs_chembert
+```
 
-After package installation, you can also run it via:
-bash
+After package installation, you can also run:
 
+```bash
 molecular-feature-case --input data.csv --feature-type descriptor
+```
 
-Useful Options
-Specify column names
-bash
+---
 
+## Useful Options
+
+Specify columns:
+
+```bash
 --smiles-column psmiles --id-column auto
+```
 
-Force the number of clusters
-bash
+Force cluster count:
 
+```bash
 --force-clusters 8
+```
 
-Tune UMAP parameters
-bash
+Tune UMAP:
 
+```bash
 --umap-components 3 --umap-neighbors 10 --umap-min-dist 0.01 --umap-metric cosine
+```
 
-Highlight specific IDs
-bash
+Highlight selected IDs:
 
+```bash
 --ids-to-mark 224,225,226,227
+```
 
-Use Morgan fingerprint only
-bash
+Use Morgan fingerprint only:
 
+```bash
 --single-fingerprint
+```
 
-Load ChemBERT from local files only
-bash
+Load ChemBERT from local files only:
 
+```bash
 --chembert-local-files-only
+```
 
-Outputs
+---
 
-Each run generates the following files under --output-dir:
+## Outputs
 
-    clustered_molecules_<feature_type>.csv: IDs, processed SMILES, cluster labels, and UMAP coordinates
-    cluster_evaluation_metrics.csv: evaluation metrics and overall scores for different cluster counts
-    cluster_evaluation_metrics.png: cluster evaluation plot
-    umap_<feature_type>_clusters.png: UMAP clustering plot
-    run_metadata.json: run parameters, sample count, feature dimension, PCA explained variance, and related metadata
-    umap_dimension_plots/: additional dimension plots when --umap-components > 2
+Each run generates the following files under `--output-dir`:
 
-Notes
+- `clustered_molecules_<feature_type>.csv`: IDs, processed SMILES, cluster labels, and UMAP coordinates
+- `cluster_evaluation_metrics.csv`: evaluation metrics and overall scores for different cluster counts
+- `cluster_evaluation_metrics.png`: cluster evaluation plot
+- `umap_<feature_type>_clusters.png`: UMAP clustering plot
+- `run_metadata.json`: run parameters, sample count, feature dimension, PCA explained variance, and related metadata
+- `umap_dimension_plots/`: additional dimension plots when `--umap-components > 2`
 
-    fingerprint is suitable for quickly reproducing the original notebook workflow.
-    descriptor is generally easier to interpret.
-    chembert is better suited for exploring pretrained semantic representations of SMILES, but it requires additional model files and longer runtime.
+---
+
+## Notes
+
+- `fingerprint` is suitable for quickly reproducing the original notebook workflow.
+- `descriptor` is generally easier to interpret.
+- `chembert` is suitable for exploring pretrained semantic representations of SMILES, but it requires additional model files and longer runtime.
