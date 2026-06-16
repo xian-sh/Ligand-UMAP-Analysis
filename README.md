@@ -1,35 +1,36 @@
+```markdown
 # Molecular Feature Case
 
-分子特征降维案例。支持三类特征：
+A molecular feature reduction pipeline supporting three feature types:
 
-- `fingerprint`：RDKit Morgan/MACCS/AtomPair/Torsion 指纹组合
-- `descriptor`：RDKit 分子描述符
-- `chembert`：ChemBERT/ChemBERTa 预训练模型 embedding
+- `fingerprint`: Combined RDKit Morgan/MACCS/AtomPair/Torsion fingerprints
+- `descriptor`: RDKit molecular descriptors
+- `chembert`: ChemBERT/ChemBERTa pre-trained model embeddings
 
-流程是：读取 SMILES 数据 -> 解析/修复 SMILES -> 构建特征 -> PCA 预降噪 -> UMAP 降维 -> KMeans 聚类 -> 输出 CSV 和图片。
+The workflow: read SMILES data → parse/repair SMILES → build features → PCA pre-denoising → UMAP dimensionality reduction → KMeans clustering → output CSV and figures.
 
 ## Repository Layout
 
 ```text
 .
 ├── molecular_feature_case/
-│   ├── cli.py                  # 命令行入口
-│   ├── config.py               # 参数和配置
-│   ├── dependencies.py         # 运行时依赖加载
-│   ├── pipeline.py             # 主流程编排
+│   ├── cli.py                  # Command-line entry point
+│   ├── config.py               # Parameters and configuration
+│   ├── dependencies.py         # Runtime dependency loading
+│   ├── pipeline.py             # Main workflow orchestration
 │   ├── models/
-│   │   └── chembert.py         # ChemBERT embedding 模型
+│   │   └── chembert.py         # ChemBERT embedding model
 │   └── tools/
-│       ├── clustering.py       # 聚类数评估和 KMeans
-│       ├── descriptors.py      # RDKit 描述符
-│       ├── fingerprints.py     # RDKit 指纹
-│       ├── io.py               # 数据读取和列名识别
-│       ├── plotting.py         # 可视化输出
+│       ├── clustering.py       # Cluster number evaluation and KMeans
+│       ├── descriptors.py      # RDKit descriptors
+│       ├── fingerprints.py     # RDKit fingerprints
+│       ├── io.py               # Data reading and column name detection
+│       ├── plotting.py         # Visualization output
 │       ├── reduction.py        # PCA / UMAP
-│       └── smiles.py           # SMILES 解析和兜底修复
-├── molecular_feature_reduction_case.py  # 兼容旧用法的轻量入口
+│       └── smiles.py           # SMILES parsing and fallback repair
+├── molecular_feature_reduction_case.py  # Lightweight entry point for legacy usage
 ├── scripts/
-│   └── demo.ipynb           # 可直接运行的小样本 demo
+│   └── demo.ipynb              # Ready-to-run small-sample demo
 ├── pyproject.toml
 ├── requirements.txt
 ├── requirements-chembert.txt
@@ -38,25 +39,25 @@
 
 ## Install
 
-核心环境：
+Core environment:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-如果要使用 ChemBERT：
+To use ChemBERT:
 
 ```bash
 pip install -r requirements-chembert.txt
 ```
 
-也可以按包安装：
+You can also install as a package:
 
 ```bash
 pip install -e .
 ```
 
-如果 `pip install rdkit` 在你的环境里不稳定，推荐：
+If `pip install rdkit` is unstable in your environment, it is recommended to use:
 
 ```bash
 conda install -c conda-forge rdkit
@@ -64,14 +65,14 @@ conda install -c conda-forge rdkit
 
 ## Input Format
 
-输入文件支持 CSV/TSV。默认自动寻找这些 SMILES 列名：
+The input file supports CSV/TSV. The following SMILES column names are automatically detected:
 
 - `SMILES`
 - `psmiles`
 - `smiles_list`
 - `canonical_smiles`
 
-如果找不到，会使用第一列作为 SMILES。ID 列默认寻找 `ID/id/name/Name/index`，找不到时自动生成行号。
+If none are found, the first column is used as SMILES. For ID columns, the default search includes `ID/id/name/Name/index`; if not found, row numbers are auto-generated.
 
 ## Usage
 
@@ -81,7 +82,7 @@ Notebook demo:
 jupyter notebook scripts/demo.ipynb
 ```
 
-使用 RDKit 指纹：
+Using RDKit fingerprints:
 
 ```bash
 python molecular_feature_reduction_case.py ^
@@ -90,7 +91,7 @@ python molecular_feature_reduction_case.py ^
   --output-dir outputs_fingerprint
 ```
 
-使用 RDKit 描述符：
+Using RDKit descriptors:
 
 ```bash
 python molecular_feature_reduction_case.py ^
@@ -99,7 +100,7 @@ python molecular_feature_reduction_case.py ^
   --output-dir outputs_descriptor
 ```
 
-使用 ChemBERT embedding：
+Using ChemBERT embeddings:
 
 ```bash
 python molecular_feature_reduction_case.py ^
@@ -109,7 +110,7 @@ python molecular_feature_reduction_case.py ^
   --output-dir outputs_chembert
 ```
 
-安装成包以后，也可以用命令：
+After installing as a package, you can also use the command:
 
 ```bash
 molecular-feature-case --input data.csv --feature-type descriptor
@@ -117,37 +118,37 @@ molecular-feature-case --input data.csv --feature-type descriptor
 
 ## Useful Options
 
-指定列名：
+Specify column names:
 
 ```bash
 --smiles-column psmiles --id-column auto
 ```
 
-强制聚类数量：
+Force the number of clusters:
 
 ```bash
 --force-clusters 8
 ```
 
-调整 UMAP：
+Adjust UMAP parameters:
 
 ```bash
 --umap-components 3 --umap-neighbors 10 --umap-min-dist 0.01 --umap-metric cosine
 ```
 
-标记指定 ID：
+Mark specific IDs:
 
 ```bash
 --ids-to-mark 224,225,226,227
 ```
 
-只用 Morgan 指纹：
+Use only Morgan fingerprints:
 
 ```bash
 --single-fingerprint
 ```
 
-本地加载 ChemBERT 模型：
+Load ChemBERT model locally:
 
 ```bash
 --chembert-local-files-only
@@ -155,15 +156,16 @@ molecular-feature-case --input data.csv --feature-type descriptor
 
 ## Outputs
 
-每次运行会在 `--output-dir` 下生成：
+Each run generates the following files in `--output-dir`:
 
-- `clustered_molecules_<feature_type>.csv`：ID、处理后的 SMILES、聚类标签、UMAP 坐标
-- `cluster_evaluation_metrics.csv`：不同聚类数的评估指标和综合分数
-- `cluster_evaluation_metrics.png`：聚类数评估图
-- `umap_<feature_type>_clusters.png`：UMAP 聚类图
-- `run_metadata.json`：运行参数、样本数、特征维度、PCA 解释方差等
-- `umap_dimension_plots/`：当 `--umap-components > 2` 时输出更多维度图
+- `clustered_molecules_<feature_type>.csv`: ID, processed SMILES, cluster labels, UMAP coordinates
+- `cluster_evaluation_metrics.csv`: Evaluation metrics and composite scores for different cluster numbers
+- `cluster_evaluation_metrics.png`: Cluster number evaluation plot
+- `umap_<feature_type>_clusters.png`: UMAP cluster visualization
+- `run_metadata.json`: Runtime parameters, sample count, feature dimensions, PCA explained variance, etc.
+- `umap_dimension_plots/`: Additional dimension plots when `--umap-components > 2`
 
 ## Notes
 
-`fingerprint` 适合快速复现原 notebook；`descriptor` 更容易解释；`chembert` 更适合探索 SMILES 的预训练语义表示，但需要额外模型文件和更长运行时间。
+`fingerprint` is suitable for quickly reproducing the original notebook; `descriptor` is more interpretable; `chembert` is better suited for exploring pre-trained semantic representations of SMILES, but requires additional model files and longer runtime.
+```
