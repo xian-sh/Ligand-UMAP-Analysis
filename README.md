@@ -1,4 +1,4 @@
-# For ligand UMAP Analysis
+# Ligand UMAP Analysis
 
 A molecular feature reduction workflow for SMILES-based datasets. It supports three feature types:
 
